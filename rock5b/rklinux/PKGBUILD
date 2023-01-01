@@ -48,7 +48,7 @@ _package() {
 
   # extract image deb
   ar x "linux-image-${_kernver}_${pkgver}-${_patchlevel}-rockchip_arm64.deb"
-  tar -xf data.tar.xz
+  tar -m -xf data.tar.xz
   install -dm755 "$pkgdir/boot"
   install -dm755 "$pkgdir/usr"
   
@@ -84,7 +84,7 @@ _package-headers() {
 
   # extract header deb
   ar x "linux-headers-${_kernver}_${pkgver}-${_patchlevel}-rockchip_arm64.deb"
-  tar -xf data.tar.xz
+  tar -m -xf data.tar.xz
   install -dm755 "$pkgdir/usr/lib/modules/$_kernver"
 
   # copy headers
