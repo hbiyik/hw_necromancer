@@ -1,0 +1,189 @@
+/*
+ * Copyright 2015 Hans de Goede <hdegoede@redhat.com>
+ *
+ * This file is dual-licensed: you can use it either under the terms
+ * of the GPL or the X11 license, at your option. Note that this dual
+ * licensing only applies to this file, and not this project as a
+ * whole.
+ *
+ *  a) This file is free software; you can redistribute it and/or
+ *     modify it under the terms of the GNU General Public License as
+ *     published by the Free Software Foundation; either version 2 of the
+ *     License, or (at your option) any later version.
+ *
+ *     This file is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ * Or, alternatively,
+ *
+ *  b) Permission is hereby granted, free of charge, to any person
+ *     obtaining a copy of this software and associated documentation
+ *     files (the "Software"), to deal in the Software without
+ *     restriction, including without limitation the rights to use,
+ *     copy, modify, merge, publish, distribute, sublicense, and/or
+ *     sell copies of the Software, and to permit persons to whom the
+ *     Software is furnished to do so, subject to the following
+ *     conditions:
+ *
+ *     The above copyright notice and this permission notice shall be
+ *     included in all copies or substantial portions of the Software.
+ *
+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ *     OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+/dts-v1/;
+#include "sun8i-a33.dtsi"
+#include "sun8i-q8-common.dtsi"
+
+/ {
+	model = "Odys Rise10Quad";
+	compatible = "allwinner,q8-a33", "allwinner,sun8i-a33";
+	
+	aliases {
+	/*	serial0 = &uart0; */
+		ethernet0 = &sdio_wifi;
+	};
+};
+
+&tcon0_out {
+	tcon0_out_lcd: endpoint@0 {
+		reg = <0>;
+		remote-endpoint = <&panel_input>;
+	};
+};
+
+&nfc {
+	status = "okay";
+	
+	pinctrl-0 = <&nand_pins &nand_cs0_pin &nand_rb0_pin &nand_cs1_pin &nand_rb1_pin>;
+
+	/*2*8Gb SKHynix H27UCG8T2BTR-BC*/
+	nand0: nand@0 {
+		reg = <0>;
+		allwinner,rb = <0>;
+		nand-ecc-mode = "hw";
+		nand-ecc-strength = <40>;
+		nand-ecc-step-size = <1024>;
+		nand-on-flash-bbt;
+	};
+	
+	nand1: nand@1 {
+		reg = <1>;
+		allwinner,rb = <1>;
+		nand-ecc-mode = "hw";
+		nand-ecc-strength = <40>;
+		nand-ecc-step-size = <1024>;
+		nand-on-flash-bbt;
+	};
+	
+	/* Concatenated MTD dev for 2 chips 
+    flash {
+            compatible = "mtd-concat";
+            devices = <&nand0 &nand1>;
+
+            partitions {
+                    compatible = "fixed-partitions";
+                    #address-cells = <2>;
+                    #size-cells = <2>;
+                    
+                    partition@0,0 {
+                            label = "bootloader";
+                            reg = <0x0 0x0000000 0x0400000>;
+                    };
+                    partition@0,400000 {
+                            label = "nanddisk";
+                            reg = <0x0 0x0400000 0x3f 0xfc00000>;
+                    };
+            };
+    };*/
+};
+
+
+&codec {
+	status = "okay";
+};
+
+&dai {
+	status = "okay";
+};
+
+&sound {
+	status = "okay";
+};
+
+&wifi_pwrseq {
+	reset-gpios = <&r_pio 0 6 GPIO_ACTIVE_LOW>; 
+/*	clocks = <&rtc 1>;*/
+/*	clock-names = "ext_clock";*/
+};
+
+
+
+/*
+*&cpu0_opp_table {
+*        opp-1104000000 {
+*                opp-hz = /bits/ 64 <1104000000>;
+*                opp-microvolt = <1320000>;
+*                clock-latency-ns = <244144>;
+*        };
+*
+*        opp-1200000000 {
+*                opp-hz = /bits/ 64 <1200000000>;
+*                opp-microvolt = <1320000>;
+*                clock-latency-ns = <244144>;
+*        };
+*
+*        
+*        opp-1300000000 {
+*                opp-hz = /bits/ 64 <1300000000>;
+*                opp-microvolt = <1320000>;
+*                clock-latency-ns = <244144>;
+*        };
+*
+*        opp-1400000000 {
+*                opp-hz = /bits/ 64 <1400000000>;
+*                opp-microvolt = <1400000>;
+*                clock-latency-ns = <244144>;
+*        };
+*        
+*        opp-1490000000 {
+*                opp-hz = /bits/ 64 <1480000000>;
+*                opp-microvolt = <1520000>;
+*                clock-latency-ns = <244144>;
+*        };
+*
+*};
+*/
+
+&ohci0 {
+    status  = "okay";
+};
+
+&usb_otg {
+	dr_mode = "host";
+};
+
+/*
+*&reg_dcdc3 {
+*	regulator-min-microvolt = <1520000>;
+*	regulator-max-microvolt = <1520000>;
+*};
+*
+*&reg_dcdc2 {
+*	regulator-max-microvolt = <1520000>;
+*};
+*
+*&reg_dcdc5 {
+*	regulator-min-microvolt = <1500000>;
+*	regulator-max-microvolt = <1500000>;
+*};
+*/

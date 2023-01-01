@@ -1,0 +1,13 @@
+1) u-boot 2022-10 stucks on sd card boot
+2) wifi driver does not fully support nl80211 driver fully, force wpa_supplicant to use wext driver isntead -Dwext flag
+3) lcd screen gamma is wrong
+4) Nand flash partiniton table is missing
+
+memory dump script
+max=4065152
+i=0
+while [ $max -gt $i ]
+do
+    busybox devmem $((64 * i)) 64 >> mem
+    i=$((i+1))
+done
