@@ -1,0 +1,104 @@
+# Maintainer: Jan Keith Darunday <aur@jkcdarunday.mozmail.com>
+# Contributor: Jack Chen <redchenjs@live.com>
+
+pkgver=5.10.110
+_commit=gca15bbe36e6c
+_patchlevel=34
+_kernver="${pkgver}-${_patchlevel}-rockchip-${_commit}"
+pkgbase=rklinux5
+pkgname=("$pkgbase" "$pkgbase-headers")
+pkgrel=4
+arch=('aarch64')
+url="https://github.com/radxa/kernel"
+_repourl="https://github.com/radxa/apt/raw/gh-pages/bullseye-stable/pool/main/"
+license=('GPL2')
+options=('!strip')
+provides=("$pkgbase")
+conflicts=("$pkgbase")
+
+source=(
+    "linux.preset"
+    "extract-vmlinux"
+    "${_repourl}/l/linux-${_kernver}/linux-headers-${_kernver}_${pkgver}-${_patchlevel}-rockchip_arm64.deb"
+    "${_repourl}/l/linux-${_kernver}/linux-image-${_kernver}_${pkgver}-${_patchlevel}-rockchip_arm64.deb"
+    )
+sha512sums=(
+    'SKIP'
+    'SKIP'
+    'SKIP'
+    'SKIP'
+    )
+noextract=("${source[@]##*/}")
+
+prepare() {
+  cd "$srcdir"
+
+  rm -rf $(find -mindepth 1 -maxdepth 1 -type d)
+}
+
+_package() {
+  pkgdesc="The Linux 5.x Kernel and Modules for Rockchip published by Radxa"
+  depends=('coreutils' 'linux-firmware' 'kmod' 'mkinitcpio>=0.7')
+  optdepends=('crda: to set the correct wireless channels of your country')
+  backup=("etc/mkinitcpio.d/$pkgbase.preset")
+  provides=("linux=${pkgver}" 'WIREGUARD-MODULE')
+  replaces=('linux-armv8')
+  conflicts=('linux')
+
+  cd "$srcdir"
+
+  # extract image deb
+  ar x "linux-image-${_kernver}_${pkgver}-${_patchlevel}-rockchip_arm64.deb"
+  tar -xf data.tar.xz
+  install -dm755 "$pkgdir/boot"
+  install -dm755 "$pkgdir/usr"
+  
+  # copy dtbs
+  cp -rf "usr/lib/linux-image-${_kernver}/rockchip/" "$pkgdir/boot/dtbs"
+
+  # copy modules
+  cp -r lib "$pkgdir/usr/lib"
+
+  # copy kernel, bootlaoder can not load compressed kernels
+  ./extract-vmlinux "boot/vmlinuz-${_kernver}" > "$pkgdir/usr/lib/modules/$_kernver/vmlinuz"
+
+  # sed expression for following substitutions
+  local _subst="
+    s|%PKGBASE%|$pkgbase|g
+    s|%KERNVER%|$_kernver|g
+  "
+
+  # install mkinitcpio preset file
+  sed "$_subst" linux.preset |
+    install -Dm644 /dev/stdin "$pkgdir/etc/mkinitcpio.d/$pkgbase.preset"
+
+  # used by mkinitcpio to name the kernel
+  echo "$pkgbase" | install -Dm644 /dev/stdin "$pkgdir/usr/lib/modules/$_kernver/pkgbase"
+}
+
+_package-headers() {
+  pkgdesc="The Linux 5.x Kernelmakepkg  Headers for Rockchip published by Radxa"
+  provides=("linux-headers=${pkgver}")
+  conflicts=('linux-headers')
+
+  cd "$srcdir"
+
+  # extract header deb
+  ar x "linux-headers-${_kernver}_${pkgver}-${_patchlevel}-rockchip_arm64.deb"
+  tar -xf data.tar.xz
+  install -dm755 "$pkgdir/usr/lib/modules/$_kernver"
+
+  # copy headers
+  cp -r "usr/src/linux-headers-$_kernver" "$pkgdir/usr/lib/modules/$_kernver/build"
+
+  # add real version for building modules and running depmod from hook
+  echo "$_kernver" |
+    install -Dm644 /dev/stdin "$pkgdir/usr/lib/modules/$_kernver/build/version"
+}
+
+for _p in "${pkgname[@]}"; do
+  eval "package_$_p() {
+    $(declare -f "_package${_p#$pkgbase}")
+    _package${_p#$pkgbase}
+  }"
+done
