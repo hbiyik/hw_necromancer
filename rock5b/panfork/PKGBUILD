@@ -1,5 +1,5 @@
-commit=120202c675749c5ef81ae4c8cdc30019b4de08f4
-fwcommit=309268f7a34ca0bba0ab94a0b09feb0191c77fb8
+_commit=120202c675749c5ef81ae4c8cdc30019b4de08f4
+_fwcommit=309268f7a34ca0bba0ab94a0b09feb0191c77fb8
 pkgname=panfork
 pkgdesc="Libgl & gbm with panfrost for Mali G610"
 pkgver=23.0.0
@@ -11,15 +11,15 @@ makedepends=( 'meson' 'python-mako' 'expat' 'bison' 'flex' 'libxext' 'libxfixes'
 url="https://gitlab.com/panfork/mesa"
 license=('custom')
 options=('!lto')
-source=("https://gitlab.com/panfork/mesa/-/archive/${commit}/mesa-${commit}.tar.gz"
-		"https://github.com/JeffyCN/rockchip_mirrors/blob/${fwcommit}/firmware/g610/mali_csffw.bin"
+source=("https://gitlab.com/panfork/mesa/-/archive/${_commit}/mesa-${_commit}.tar.gz"
+		"https://raw.githubusercontent.com/JeffyCN/rockchip_mirrors/${_fwcommit}/firmware/g610/mali_csffw.bin"
         LICENSE)
 sha512sums=('SKIP'
             'SKIP'
             'SKIP')
 
 build() {
-  arch-meson mesa-$commit build \
+  arch-meson mesa-$_commit build \
     -Dgallium-drivers=panfrost \
     -Dvulkan-drivers= \
     -Dllvm=disabled \
@@ -36,7 +36,7 @@ build() {
 }
 
 package_panfork() {
-  provides=('libgl' 'libegl' 'opengl-driver')
+  provides=('libgl' 'libegl' 'libgles' 'opengl-driver' 'mesa' 'libglvnd')
   conflicts=('libgl' 'mesa' 'libglvnd')
   replaces=('libgl' 'mesa' 'libglvnd')
 
