@@ -1,0 +1,27 @@
+pkgver=rkr3.5
+_rev="gen-${pkgver}"
+_bsp="linux-5.10-${_rev}"
+_project="linux-rga"
+pkgname=librga
+pkgrel=1
+pkgdesc='Rockchip RGA User-Space Library'
+arch=('aarch64')
+url='https://gitlab.com/rk3588_linux/linux/linux-rga'
+license=('Apache')
+depends=('gcc-libs' 'meson')
+makedepends=('meson')
+source=("${pkgname}-${pkgver}".tar.gz::"https://gitlab.com/rk3588_linux/linux/${_project}/-/archive/${_bsp}/${_project}-${_bsp}.tar.gz")
+sha256sums=('SKIP')
+
+build() {
+	meson setup --prefix $pkgdir/usr builddir $_project-$_bsp
+	ninja -C builddir
+}
+
+package() {
+  	provides=($pkgname)
+  	replaces=($pkgname)
+  	conflicts=($pkgname)
+  	depends=("libdrm")
+  	ninja -C builddir install
+}
