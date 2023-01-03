@@ -1,5 +1,3 @@
-# TO-DO: sha512 hashes
-
 pkgver=5.10.110
 _commit=gca15bbe36e6c
 _patchlevel=34
@@ -22,10 +20,10 @@ source=(
     "${_repourl}/l/linux-${_kernver}/linux-image-${_kernver}_${pkgver}-${_patchlevel}-rockchip_arm64.deb"
     )
 sha512sums=(
-    'SKIP'
-    'SKIP'
-    'SKIP'
-    'SKIP'
+    'f01e7925b262d2874a8a991b1f27d057356a2a384d2012b61be5a631d4e4d7cf87461c8fb9e7f183831f5a829ad204897f1f0545a52df6288a0e04a5c2e31b96'
+    'ba6edcd5f56a4c3e865578eabf1e1311b8e5e7babffdb0f84b99971238505ca27eba506f2723638129ef6558eba95f7e4fd2e07b40e5a4de716e5de90d1cbe79'
+    '5b335a98939d9d2adbfe9ec55342af151066919d6504aecbd165e08e437b133d1bf311962321195a05093cd05197ba41bf2aa8c17355dab8401e84cb067b0c7b'
+    '1327ef88ff29cb621c6b95a4677a9a107816c369ad132c07dc4a8de40322aec31e3920f37a3b92abeb64d0a4bad4900cfe16cfc68546039ed919222934615ee6'
     )
 noextract=("${source[@]##*/}")
 
