@@ -1,0 +1,44 @@
+_origpkg="v4l-utils"
+pkgname="rk${_origpkg}"
+pkgver=1.22.1
+pkgrel=1
+pkgdesc="Userspace tools and conversion library for Video 4 Linux"
+arch=('aarch64')
+url="https://linuxtv.org/"
+provides=("libv4l=$pkgver")
+replaces=('libv4l')
+conflicts=('libv4l')
+backup=(etc/rc_maps.cfg)
+license=('LGPL')
+options=('!distcc')
+makedepends=('qt5-base' 'alsa-lib' 'coreutils')
+optdepends=('qt5-base: for qv4l2' 'alsa-lib: for qv4l2')
+depends=('hicolor-icon-theme' 'gcc-libs' 'sysfsutils' 'libjpeg-turbo')
+source=(https://linuxtv.org/downloads/v4l-utils/${_origpkg}-${pkgver}.tar.bz2
+		'0001-libv4l2-Support-mmap-to-libv4l-plugin.patch'
+		'0002-Convert-deprecated-libbpf-API.patch')
+sha256sums=('65c6fbe830a44ca105c443b027182c1b2c9053a91d1e72ad849dfab388b94e31'
+            'SKIP'
+            'SKIP')
+validpgpkeys=('05D0169C26E41593418129DF199A64FADFB500FF') # Gregor Jasny <gjasny@googlemail.com>
+
+prepare() {
+	cd "${srcdir}/${_origpkg}-${pkgver}" 
+	patch -Np1 -i ../0001-libv4l2-Support-mmap-to-libv4l-plugin.patch
+	patch -Np1 -i ../0002-Convert-deprecated-libbpf-API.patch
+}
+
+build() {
+  cd "${srcdir}/${_origpkg}-${pkgver}"
+  ./configure --prefix=/usr --sysconfdir=/etc --sbindir=/usr/bin
+  make -j$(nproc)
+}
+
+package() {
+  provides=($pkgname)
+  replaces=($pkgname $_origpkg)
+  conflicts=($pkgname $_origpkg)
+  cd "${srcdir}/${_origpkg}-${pkgver}"
+  MAKEFLAGS="-j1" make install DESTDIR="${pkgdir}/"
+  rm "${pkgdir}/usr/bin/ivtv-ctl"
+}
