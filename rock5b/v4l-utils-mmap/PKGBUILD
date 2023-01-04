@@ -1,5 +1,5 @@
 _origpkg="v4l-utils"
-pkgname="rk${_origpkg}"
+pkgname="${_origpkg}-mmap"
 pkgver=1.22.1
 pkgrel=1
 pkgdesc="Userspace tools and conversion library for Video 4 Linux"
@@ -35,8 +35,7 @@ build() {
 }
 
 package() {
-  provides=($pkgname)
-  replaces=($pkgname $_origpkg)
+  provides=($pkgname $_origpkg)
   conflicts=($pkgname $_origpkg)
   cd "${srcdir}/${_origpkg}-${pkgver}"
   MAKEFLAGS="-j1" make install DESTDIR="${pkgdir}/"
