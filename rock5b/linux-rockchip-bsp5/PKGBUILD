@@ -1,17 +1,21 @@
+# Maintainer: Faruk Dikcizgi <boogiepop@gmx.de>
+# Contributor: Jan Keith Darunday <aur@jkcdarunday.mozmail.com>
+# Contributor: Jack Chen <redchenjs@live.com>
+
 pkgver=5.10.110
 _commit=gca15bbe36e6c
 _patchlevel=34
 _kernver="${pkgver}-${_patchlevel}-rockchip-${_commit}"
-pkgbase=rklinux5
+pkgbase=linux-rockchip-bsp5
 pkgname=("$pkgbase" "$pkgbase-headers")
-pkgrel=4
+pkgrel=1
 arch=('aarch64')
 url="https://github.com/radxa/kernel"
 _repourl="https://github.com/radxa/apt/raw/gh-pages/bullseye-stable/pool/main/"
 license=('GPL2')
 options=('!strip')
-provides=("$pkgbase")
-conflicts=("$pkgbase")
+makedepends=('binutils' 'tar' 'grep' 'mkinitcpio' 'sed')
+pkgdesc="Precompiled Kernel Images based on 5.10.x BSP kernel published by RADXA"
 
 source=(
     "linux.preset"
@@ -38,9 +42,8 @@ _package() {
   depends=('coreutils' 'linux-firmware' 'kmod' 'mkinitcpio>=0.7' 'grep' 'gzip')
   optdepends=('crda: to set the correct wireless channels of your country')
   backup=("etc/mkinitcpio.d/$pkgbase.preset")
-  provides=("linux=${pkgver}" 'WIREGUARD-MODULE')
-  replaces=('linux-armv8')
-  conflicts=('linux')
+  provides=("linux" "linux-rockchip-bsp" "linux-rockchip-bsp5")
+  conflicts=("linux-rockchip-bsp-5")
 
   cd "$srcdir"
 
@@ -75,8 +78,8 @@ _package() {
 
 _package-headers() {
   pkgdesc="The Linux 5.x Kernelmakepkg  Headers for Rockchip published by Radxa"
-  provides=("linux-headers=${pkgver}")
-  conflicts=('linux-headers')
+  provides=("linux-headers")
+  conflicts=("linux-headers")
 
   cd "$srcdir"
 
