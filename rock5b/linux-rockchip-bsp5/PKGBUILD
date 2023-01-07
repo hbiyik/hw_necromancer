@@ -54,7 +54,8 @@ _package() {
   install -dm755 "$pkgdir/usr"
   
   # copy dtbs
-  cp -rf "usr/lib/linux-image-${_kernver}/rockchip/" "$pkgdir/boot/dtbs"
+  mkdir "$pkgdir/boot/dtbs"
+  cp -rf "usr/lib/linux-image-${_kernver}/rockchip/" "$pkgdir/boot/dtbs/rockchip"
 
   # copy modules
   cp -r lib "$pkgdir/usr/lib"
