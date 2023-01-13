@@ -17,7 +17,7 @@
 
 pkgname=ffmpeg4.4-mpp
 pkgver=4.4.3
-pkgrel=1
+pkgrel=2
 pkgdesc='MPP based video decoder acelleration for Rockchip SOCs'
 arch=(aarch64 arm7f)
 url=https://ffmpeg.org/
@@ -207,9 +207,10 @@ package() {
     fi
   done
   
-  # Rename ffmpeg binaries so they wont conlict with ffmpeg5
-  for f in usr/lib/ffmpeg4.4/*; do
-    mv usr/bin/$f "usr/bin/${f}4"
+  # Rename ffmpeg binaries so they wont conlfict with ffmpeg5
+  for f in usr/bin/*; do
+    mv $f "${f}4"
+  done
 
   rm -r usr/share
 }
