@@ -16,7 +16,7 @@ _fwcommit=309268f7a34ca0bba0ab94a0b09feb0191c77fb8
 pkgname=mesa-panfork-git
 pkgdesc="Libgl & gbm with panfrost for Mali G610"
 pkgver=r164484.120202c6757
-pkgrel=1
+pkgrel=2
 arch=('aarch64' 'armhf')
 makedepends=('meson' 'python-mako' 'bison' 'flex' 'cmake'
  			 'libxfixes' 'libxxf86vm' 'lm_sensors' 'libxshmfence' 'wayland-protocols' 'libdrm' 'libxrandr')
@@ -77,6 +77,12 @@ package() {
   _install fakeinstall/usr/lib/libEG*
   _install fakeinstall/usr/include
   _install fakeinstall/usr/lib/pkgconfig
+  ln -srf libGL.so "$pkgdir/usr/lib/libOpenGL.so.0.0.0"
+  ln -srf libGL.so "$pkgdir/usr/lib/libOpenGL.so.0"
+  ln -srf libGL.so "$pkgdir/usr/lib/libOpenGL.so"
+  ln -srf libGL.so "$pkgdir/usr/lib/libOpenGLX.so.0.0.0"
+  ln -srf libGL.so "$pkgdir/usr/lib/libOpenGLX.so.0"
+  ln -srf libGL.so "$pkgdir/usr/lib/libOpenGLX.so"
   # make sure there are no files left to install
   find fakeinstall -depth -print0 | xargs -0 rmdir
 
