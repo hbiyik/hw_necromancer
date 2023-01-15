@@ -24,7 +24,7 @@ _clangbuild=
 pkgbase=kodi-stable-mpp-git
 pkgname=("$pkgbase" "$pkgbase-eventclients" "$pkgbase-tools-texturepacker" "$pkgbase-dev")
 pkgver=r57760.f8fdeb6b1b1
-pkgrel=1
+pkgrel=2
 arch=('aarch64' 'arm7f')
 url="https://kodi.tv"
 license=('GPL2')
@@ -84,8 +84,9 @@ source=(
   "http://mirrors.kodi.tv/build-deps/sources/libudfread-$_libudfread_version.tar.gz"
   0001-upstream-build-fixes-from-debian.patch::https://patch-diff.githubusercontent.com/raw/xbmc/xbmc/pull/22291.patch
   0002-ffmpeg-buildsys.patch
-  0003-rkmpp.patch
+  0003-rkmpp-4.patch
   0004-build-fix-for-dav1d-1.0.0.patch
+  0005-av_image_fill_plane_sizes.patch
 )
 noextract=(
   "libdvdcss-$_libdvdcss_version.tar.gz"
@@ -112,6 +113,7 @@ b2sums=('SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
+        'SKIP'
         'SKIP')
 
 pkgver() {
@@ -126,8 +128,9 @@ prepare() {
   cd "$_gitname"
   patch -p1 -N -i ../0001-upstream-build-fixes-from-debian.patch
   patch -p1 -N -i ../0002-ffmpeg-buildsys.patch 
-  cp ../0003-rkmpp.patch tools/depends/target/ffmpeg
+  cp ../0003-rkmpp-4.patch tools/depends/target/ffmpeg
   cp ../0004-build-fix-for-dav1d-1.0.0.patch tools/depends/target/ffmpeg
+  cp ../0005-av_image_fill_plane_sizes.patch tools/depends/target/ffmpeg
 
   if [[ -n "$_clangbuild" ]]; then
     msg "Building with clang"
