@@ -16,7 +16,7 @@
 
 pkgname=ffmpeg-mpp
 pkgver=5.1.2
-pkgrel=1
+pkgrel=2
 epoch=2
 pkgdesc='Complete solution to record, convert and stream audio and video'
 arch=(aarch64 arm7f)
@@ -111,14 +111,11 @@ conflicts=(
   $pkgname
   ffmpeg
 )
-options=(
-  debug
-)
 _tag=1326fe9d4c85cca1ee774b072ef4fa337694f2e7
 source=(
   git+https://git.ffmpeg.org/ffmpeg.git?#tag=${_tag}
   add-av_stream_get_first_dts-for-chromium.patch
-  rkmpp.patch
+  rkmpp-5.patch
 )
 b2sums=('SKIP'
         '555274228e09a233d92beb365d413ff5c718a782008075552cafb2130a3783cf976b51dfe4513c15777fb6e8397a34122d475080f2c4483e8feea5c0d878e6de'
@@ -128,7 +125,7 @@ validpgpkeys=(DD1EC9E8DE085C629B3E1846B18E8928B3948D64) # Michael Niedermayer <m
 prepare() {
   cd ffmpeg
   patch -Np1 -i ../add-av_stream_get_first_dts-for-chromium.patch # https://crbug.com/1251779
-  patch -Np1 -i ../rkmpp.patch
+  patch -Np1 -i ../rkmpp-5.patch
 }
 
 pkgver() {
@@ -192,7 +189,6 @@ build() {
     --enable-shared \
     --enable-version3 \
     --enable-rkmpp \
-    --enable-librga \
     --enable-vulkan $CONFIG
   make -j$(nproc)
   make tools/qt-faststart
