@@ -1,7 +1,7 @@
 From 39e9a603be52a5ef2a791e0ea9287dde802f14e7 Mon Sep 17 00:00:00 2001
 From: Jeffy Chen <jeffy.chen@rock-chips.com>
 Date: Wed, 4 Sep 2019 17:24:37 +0800
-Subject: [PATCH 01/13] avcodec/rkmppdec: Clear eos flag after reset
+Subject: [PATCH 01/14] avcodec/rkmppdec: Clear eos flag after reset
 
 Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 ---
@@ -27,7 +27,7 @@ index d4f09f456d..d3f87975e4 100644
 From bcc297fedd3a2a78e116241a3568a272d9ede3be Mon Sep 17 00:00:00 2001
 From: Jeffy Chen <jeffy.chen@rock-chips.com>
 Date: Wed, 4 Sep 2019 17:27:46 +0800
-Subject: [PATCH 02/13] avcodec/rkmppdec: Compatible with old reordered_opaque
+Subject: [PATCH 02/14] avcodec/rkmppdec: Compatible with old reordered_opaque
  and pkt_pts
 
 Some users might still using these deprecated APIs.
@@ -71,7 +71,7 @@ index d3f87975e4..fccaa6a0fd 100644
 From 7acd9d6b4715f64d21cc136d30420777c0e3b372 Mon Sep 17 00:00:00 2001
 From: Jeffy Chen <jeffy.chen@rock-chips.com>
 Date: Wed, 19 May 2021 09:55:03 +0800
-Subject: [PATCH 03/13] rkmppdec: Remove frame buffer limit
+Subject: [PATCH 03/14] rkmppdec: Remove frame buffer limit
 
 It would hang when reaching the limit.
 
@@ -113,7 +113,7 @@ index fccaa6a0fd..0b845a118e 100644
 From 02eaaec51070c0b924ad0cb47a42f86127c11f95 Mon Sep 17 00:00:00 2001
 From: Jeffy Chen <jeffy.chen@rock-chips.com>
 Date: Thu, 20 May 2021 10:19:15 +0800
-Subject: [PATCH 04/13] avcodec/rkmppdec: Rework decoding flow
+Subject: [PATCH 04/14] avcodec/rkmppdec: Rework decoding flow
 
 Stop using the deprecated MPP_DEC_GET_STREAM_COUNT API.
 
@@ -797,7 +797,7 @@ index 0b845a118e..e6508ddfbb 100644
 From e4d5ce7e1e05aad8a800db1d94d905ab8339c26d Mon Sep 17 00:00:00 2001
 From: Jeffy Chen <jeffy.chen@rock-chips.com>
 Date: Fri, 21 May 2021 04:23:36 +0800
-Subject: [PATCH 05/13] HACK: avcodec/rkmppdec: Force aligning coded width and
+Subject: [PATCH 05/14] HACK: avcodec/rkmppdec: Force aligning coded width and
  height to 64
 
 The chromium would try to align planes' width and height to 32, which
@@ -833,7 +833,7 @@ index e6508ddfbb..e5d565256c 100644
 From f192efbf66c787c4dc51e965b03cb77601a24bea Mon Sep 17 00:00:00 2001
 From: Jeffy Chen <jeffy.chen@rock-chips.com>
 Date: Thu, 20 May 2021 10:20:17 +0800
-Subject: [PATCH 06/13] HACK: avcodec/rkmppdec: Support outputing YUV420P
+Subject: [PATCH 06/14] HACK: avcodec/rkmppdec: Support outputing YUV420P
 
 Lots of users support YUV420P format rather than DRM_PRIME.
 
@@ -1067,7 +1067,7 @@ index e5d565256c..a10a1dc64e 100644
 From 19457080d4f6f758509b0f10921f75d794e3e422 Mon Sep 17 00:00:00 2001
 From: Jeffy Chen <jeffy.chen@rock-chips.com>
 Date: Mon, 27 Sep 2021 10:20:54 +0800
-Subject: [PATCH 07/13] avcodec/rkmppdec: Support logging fps
+Subject: [PATCH 07/14] avcodec/rkmppdec: Support logging fps
 
 Set env FFMPEG_RKMPP_LOG_FPS=1 to enable it.
 
@@ -1189,7 +1189,7 @@ index a10a1dc64e..20b5783db0 100644
 From 773487e3632a25010691a95c23ad17ba768fc382 Mon Sep 17 00:00:00 2001
 From: boogie <boogiepop@gmx.com>
 Date: Sat, 7 Jan 2023 00:43:42 +0100
-Subject: [PATCH 08/13] HACK: libavcodec & rkmppdec: Add
+Subject: [PATCH 08/14] HACK: libavcodec & rkmppdec: Add
  FF_CODEC_CAP_CONTIGUOUS_BUFFERS
 
 Add FF_CODEC_CAP_CONTIGUOUS_BUFFERS to alloc contiguous buffers.
@@ -1324,7 +1324,7 @@ index 20b5783db0..f0c4c5bb03 100644
 From 38f3960fd42e4bdd7412d45ca795d09669835956 Mon Sep 17 00:00:00 2001
 From: Jeffy Chen <jeffy.chen@rock-chips.com>
 Date: Mon, 13 Dec 2021 15:44:43 +0800
-Subject: [PATCH 09/13] HACK: avcodec/rkmppdec: Define DRM_FORMAT_NV12_10
+Subject: [PATCH 09/14] HACK: avcodec/rkmppdec: Define DRM_FORMAT_NV12_10
 
 DRM_FORMAT_NV12_10 is a downstream custom format for Rockchip.
 
@@ -1365,7 +1365,7 @@ index f0c4c5bb03..295610a4ec 100644
 From 60755d6e5fe77bbdb73d6427e958ccdda508b229 Mon Sep 17 00:00:00 2001
 From: Jeffy Chen <jeffy.chen@rock-chips.com>
 Date: Wed, 15 Dec 2021 15:34:48 +0800
-Subject: [PATCH 10/13] avcodec/rkmppdec: Support NV16
+Subject: [PATCH 10/14] avcodec/rkmppdec: Support NV16
 
 The MPP might output NV16 format.
 
@@ -1424,7 +1424,7 @@ index 295610a4ec..1c09cdfbbc 100644
 From 23001dea7ece2affef0470d1dc51af8e8b5135ec Mon Sep 17 00:00:00 2001
 From: Jeffy Chen <jeffy.chen@rock-chips.com>
 Date: Wed, 23 Mar 2022 14:20:16 +0800
-Subject: [PATCH 11/13] avcodec/rkmppdec: Support sync mode
+Subject: [PATCH 11/14] avcodec/rkmppdec: Support sync mode
 
 Some people just don't know how to handle async APIs :(
 
@@ -1482,7 +1482,7 @@ index 1c09cdfbbc..edc05f5bd0 100644
 From 18e847bcc7c79a46e511d01549a5479bdbfc31f1 Mon Sep 17 00:00:00 2001
 From: boogie <boogiepop@gmx.com>
 Date: Sun, 8 Jan 2023 01:32:15 +0100
-Subject: [PATCH 12/13] Add rkmpp H263 MPEG1 MPEG2 MPEG4 DECODERS Priotize
+Subject: [PATCH 12/14] Add rkmpp H263 MPEG1 MPEG2 MPEG4 DECODERS Priotize
  RKMPP decoders first Allow NV15
 
 ---
@@ -1643,7 +1643,7 @@ index edc05f5bd0..617a611af5 100644
 From b01b253667edaf390bcfc2c929fa9f4ed21882e2 Mon Sep 17 00:00:00 2001
 From: boogie <boogiepop@gmx.com>
 Date: Fri, 13 Jan 2023 22:27:01 +0100
-Subject: [PATCH 13/13] rkmpp: interface with kernel directly for rga and ditch
+Subject: [PATCH 13/14] rkmpp: interface with kernel directly for rga and ditch
  librga
 
 ---
@@ -2631,6 +2631,45 @@ index 617a611af5..6d55db7935 100644
          ret = ff_get_buffer(avctx, frame, 0);
          if (ret < 0)
              goto out;
+-- 
+2.39.0
+
+
+From c7d6f550b0dcf692ac11affa62bb5ca3d7ebd3bc Mon Sep 17 00:00:00 2001
+From: boogie <boogiepop@gmx.com>
+Date: Tue, 17 Jan 2023 01:02:19 +0100
+Subject: [PATCH 14/14] ugliest hack: vp8&9 color space workaround
+
+---
+ libavcodec/rkmppdec.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/libavcodec/rkmppdec.c b/libavcodec/rkmppdec.c
+index 6d55db7935..8ca686cfd9 100644
+--- a/libavcodec/rkmppdec.c
++++ b/libavcodec/rkmppdec.c
+@@ -738,6 +738,21 @@ static int rkmpp_get_frame(AVCodecContext *avctx, AVFrame *frame, int timeout)
+     frame->color_trc        = mpp_frame_get_color_trc(mppframe);
+     frame->colorspace       = mpp_frame_get_colorspace(mppframe);
+ 
++    /* ugliest hack in the world: firefox does not probe with avformat, so it does not
++     * have any idea about the frame format, instead tries to guess with decoder profile
++     * matches. Since this decoder does not provide any profile, it just sets color pro-
++     * file to 0 which RGB. This causes funny coloring on video decode.
++     * I set this manually to most popular BT709 colorspace for VP8&9. This worksaround
++     * youtube problems, but does not work always. At least there is no need to run this
++     * on each frame... But yeah it is too late and i dont care.
++    */
++    if ((avctx->codec_id == AV_CODEC_ID_VP8 || avctx->codec_id == AV_CODEC_ID_VP9 ) \
++    		&& avctx->profile == FF_PROFILE_UNKNOWN && !frame->colorspace){
++    	frame->color_primaries = AVCOL_PRI_BT709;
++    	frame->color_trc = AVCOL_TRC_BT709;
++    	frame->colorspace = AVCOL_SPC_BT709;
++    }
++
+     mode = mpp_frame_get_mode(mppframe);
+     frame->interlaced_frame = ((mode & MPP_FRAME_FLAG_FIELD_ORDER_MASK) == MPP_FRAME_FLAG_DEINTERLACED);
+     frame->top_field_first  = ((mode & MPP_FRAME_FLAG_FIELD_ORDER_MASK) == MPP_FRAME_FLAG_TOP_FIRST);
 -- 
 2.39.0
 

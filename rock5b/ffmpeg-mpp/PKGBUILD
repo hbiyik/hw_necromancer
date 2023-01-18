@@ -13,10 +13,13 @@
 #  - remove depends on rav1e, remove --enable-librav1e
 #  - remove depends on svt-av1, remove --enable-libsvtav1
 #  - remove --enable-lto
+#  - enable rockchip decoders witht he highest priority
+#  - interface rockchip rga from kernel to userspace directly
+#  - hack around rockchips vp8&9 colorspace is not detected when used with Firefox
 
 pkgname=ffmpeg-mpp
 pkgver=5.1.2
-pkgrel=2
+pkgrel=3
 epoch=2
 pkgdesc='Complete solution to record, convert and stream audio and video'
 arch=(aarch64 arm7f)
