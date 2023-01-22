@@ -2,22 +2,34 @@
 # Maintainer: Kevin Mihelich <kevin@archlinuxarm.org>
 
 buildarch=8
-_pkgname=linux-radxa-rkbsp5
-pkgbase=$_pkgname-git
-pkgver=5.10.110
+_pkgver=5.10
+_user="radxa"
+pkgbase=linux-radxa-rkbsp5
+pkgname=("${pkgbase}-git-headers" "${pkgbase}-git")
+pkgver=$_pkgver
 pkgrel=1
-arch=('aarch64' 'arm7f')
-url="https://github.com/radxa"
-_kernelrepo="${url}/kernel"
-_overlayrepo="${url}/overlays"
+arch=('aarch64')
+license=('GPL2')
+url="https://github.com/${_user}"
+_kernelrepo="kernel"
+_overlayrepo="overlays"
 _kernelbranch=linux-5.10-gen-rkr3.4
 _overlaybranch=main
 _desc="Radxa fork of Linux5.10 based fork of Rockchip BSP"
-license=('GPL2')
-makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git' 'uboot-tools' 'vboot-utils' 'dtc')
+
+makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git' 'uboot-tools' 'vboot-utils' 'dtc' 'curl' 'jq')
 options=('!strip')
-source=($_kernelrepo/archive/refs/heads/$_kernelbranch.tar.gz
-        $_overlayrepo/archive/refs/heads/$_overlaybranch.tar.gz
+
+# Patch1-19 comes from Radxa: https://github.com/radxa-repo/bsp/tree/main/linux/rockchip
+# Patch20: Warning Supressions for buildsystem not to quit including DistCC builds
+# Patch21-25: icecream95's mesa speed patches from kernel 6.x https://gitlab.com/panfork/rk3588-implicit-sync
+# Patch22: Force Enabling AV1 decoder in 3588. This may be implemented in radxa git as well soon
+source=(git+https://github.com/$_user/$_kernelrepo.git#branch=$_kernelbranch
+        git+https://github.com/$_user/$_overlayrepo.git#branch=$_overlaybranch
+		'60-linux.hook'
+		'90-linux.hook'
+		'linux.preset'
+		'extlinux.arch.template'
 		'0001-mm-page_alloc-fix-building-error-on-Werror-array-com.patch'
 		'0002-etherdevice-Adjust-ether_addr-prototypes-to-silence-.patch'
 		'0003-drm-rockchip-vop-Use-clipped-src-dst-coordinates.patch'
@@ -46,6 +58,10 @@ source=($_kernelrepo/archive/refs/heads/$_kernelbranch.tar.gz
 		'0026-Enable_AV1_decoder_on_3588.patch')
 b2sums=('SKIP'
         'SKIP'
+        '7c173ff9b2318f756a7f57712961e47b0952a9c510f5d936ff29d12df9a9bd205ff1cf761802e390c3d090eedc14eb562ebd1b90d69e0a3bfb247cc1687a176f'
+        'c9ffb118fa190b0dc8573e81ed01baec7919b91e06a990c09bbbc7810c36adb5ecbe958d24373849a96a80bd842f9cce4eeb8f298ddd27cc1cf4f0bbbe3b4d32'
+        'b5ebfe78b703b7d5ea31be16513ff4e91d0ca7f13657c6d09ff92ef4f1566bf501a4b536b7f48791055d0b327724ada23a3f5a34247c5effe3fe2ff7e1acd8eb'
+        '2c3c31d8ab8bece5805e730bcd62beeaf484e125fe079311fc406696f85877fe2f5a3fbff47868c6c86c809bbc54ff3ce263a36a94eb9c764e4ddbfa6b9c3c4a'
         '74b6d76888267785ac99e58bdb852c667865d44353821c01052734d58e1213c16290aabff7ae6c95ac6b24893fe5109897f949d814ccec55cc69af9885fc62f6'
         '461eb48692574f48d37a9a236b3a17992493cf07a39ab72f78fa0ac4f04e3ff9896f16e721c111f865d9aa3d3f0d7b7c082fe2f319eee0e1a6c54db44f0a6e53'
         '2703d12281e60e2b9f057bbb3ac28e190f77c4ad8cfccc6f1a316b9bc6434e7ca296221eeb8992134c2d365a5afea7b7adf1d9516e3c89c3fc03f0941f65e5c2'
@@ -71,11 +87,26 @@ b2sums=('SKIP'
         '053bd95a861c9ee1cc8fa7a9af787d927c9110fffd2780c4972ce97ee2ade1ff567071158e89734b2352ac0c98aff82259c241baa0cee263919ec012c9ef9478'
         'ea47ec8ba687f3a82d790797bb772ef04dd0dd5ab64d7f2c674659068c0332374c49e0e58b9ae7768bc7c6bfb67830b96b74a981ed4639fc1a8ef9f1fea9acb5'
         '4dccfcdd1f2e9c3ba556a0c15541b6e7522e12e0d3e0153937266026fe365f54ed45ab77f7e24397acc61c0a170803214ddc452d46f7659c57eba5b82107d7d2'
-        '6c4be702991e150c7d1eedb13556bb4e1a01959eadde84cd83b940bad4f69f95cf375158f961e57ec103d1bc84e7c0a2a7a2d625cb311539128b1cb5130be99d')
+        '7c61be00b97a8acb759c35f23969cdfb4e739a8c88fd147d2af4594fa14100a2da90b160e04b8632c3dca703ff2c1973138d7f765c5b9a7039c6aae7f0078d9a')
+
+pkgver(){
+	#gets the commit count of both repos + _pkgrel and sums them to calculate the revision number
+	cd overlays
+	local _ocommits="$(git rev-list --count HEAD)"
+	local _ocommit="$(git rev-parse --short HEAD)"
+	cd ../kernel
+	local _kcommits="$(git rev-list --count HEAD)"
+	local _kcommit="$(git rev-parse --short HEAD)"
+	
+	local _revnum=$(($_kcommits + $_ocommits + $pkgrel))
+	local _version="${_pkgver}.${_revnum}.${_kcommit}.${_ocommit}"
+	echo $_version > pkgver
+	printf $_version
+}
 
 prepare() {
-  cd kernel-$_kernelbranch
-  cp -rf ../overlays-$_overlaybranch/arch .
+  cd kernel
+  cp -rf ../overlays/arch .
   # patch with radxa patches and dont care if they fail
   for p in ../*.patch; do
     echo "Patching with ${p}"
@@ -85,13 +116,8 @@ prepare() {
   # this is only for local builds so there is no need to integrity check
   for p in ../../custom/*.patch; do
     echo "Custom Patching with ${p}"
-    patch -p1 -N -i $p
+    patch -p1 -N -i $p || true
   done
-
-  echo "Setting version..."
-  scripts/setlocalversion --save-scmversion
-  echo "-$pkgrel" > localversion.10-pkgrel
-  echo "${pkgbase#linux}" > localversion.20-pkgname
 
   if [ -f ../../custom/config ]; then
     echo "Using User Specific Config"
@@ -105,70 +131,75 @@ prepare() {
 }
 
 build() {
-  cd kernel-$_kernelbranch
+  cd kernel
 
-  # get kernel version
+  local _version="$(<pkgver)"
+  _version="${_version/"$_pkgver"/}"
+  _version="${_version//\./-}"
+  sed  -i "5s/.*/EXTRAVERSION = ${_version}/" Makefile
+  echo "-radxa-rkbsp" > .scmversion
+  # should result in kernelmaj.kernelmin.patchver-totalcommitnum-hashofkernel-hashofoverlays-radxa-rkbsp
+ 
   make -j$(nproc) olddefconfig prepare
   make -s kernelrelease > version
-
-  # build!
   unset LDFLAGS
-
   make -j$(nproc) ${MAKEFLAGS} Image modules
-  # Generate device tree blobs with symbols to support applying device tree overlays in U-Boot
   make -j$(nproc) ${MAKEFLAGS} DTC_FLAGS="-@" dtbs
 }
 
-_package() {
+_package-git() {
   pkgdesc="The Linux Kernel and modules - ${_desc}"
   depends=('coreutils' 'kmod' 'mkinitcpio>=0.7')
   optdepends=('wireless-regdb: to set the correct wireless channels of your country')
-  provides=("linux=${pkgver}" "WIREGUARD-MODULE")
+  provides=("linux=${pkgver}" "linux-rkbsp")
   conflicts=('linux')
   backup=("etc/mkinitcpio.d/${pkgbase}.preset")
 
-  cd kernel-$_kernelbranch
-  local _kernver="$(<version)"
+  cd kernel
+  
+  local _version="$(<version)"
   
   # install dtbs
-  make INSTALL_DTBS_PATH="${pkgdir}/boot/dtbs" dtbs_install
+  make INSTALL_DTBS_PATH="${pkgdir}/boot/dtbs/$pkgbase" dtbs_install
+
+  # install extlinux template
+  install -Dm644 ../extlinux.arch.template "$pkgdir/boot/extlinux/extlinux.arch.template"
   
   # install modules
   make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 modules_install
 
   # copy kernel
-  install -Dm644 arch/arm64/boot/Image -t "$pkgdir/usr/lib/modules/$_kernver/vmlinuz"
+  install -Dm644 arch/arm64/boot/Image "$pkgdir/usr/lib/modules/$_version/vmlinuz"
+
+  # remove build and source links
+  rm "$pkgdir/usr/lib/modules/$_version"/{source,build}
 
   # sed expression for following substitutions
   local _subst="
-    s|%PKGBASE%|${_pkgname}|g
-    s|%KERNVER%|${_kernver}|g
+    s|%PKGBASE%|${pkgbase}|g
+    s|%KERNVER%|${_version}|g
   "
 
   # used by mkinitcpio to name the kernel
-  echo "$_pkgname" | install -Dm644 /dev/stdin "$pkgdir/usr/lib/modules/$_kernver/pkgbase"
+  echo "$pkgbase" | install -Dm644 /dev/stdin "$pkgdir/usr/lib/modules/$_version/pkgbase"
 
   # install mkinitcpio preset file
-  sed "$_subst" linux.preset |
-    install -Dm644 /dev/stdin "$pkgdir/etc/mkinitcpio.d/$_pkgname.preset"
-  # install pacman hooks
-  sed "${_subst}" ../60-linux.hook |
-    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/60-${pkgbase}.hook"
-  sed "${_subst}" ../90-linux.hook |
-    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/90-${pkgbase}.hook"
+  sed "$_subst" ../linux.preset |
+    install -Dm644 /dev/stdin "$pkgdir/etc/mkinitcpio.d/$pkgbase.preset"
+  echo $pkgbase
 }
 
-_package-headers() {
+_package-git-headers() {
   pkgdesc="Header files and scripts for building modules for linux kernel - ${_desc}"
-  provides=("linux-headers=${pkgver}")
+  provides=("linux-headers=${pkgver}" "linux-rkbsp-headers")
   conflicts=('linux-headers')
 
-  cd kernel-$_kernelbranch
-  local builddir="$pkgdir/usr/lib/modules/$(<version)/build"
+  cd kernel
+  local _version="$(<version)"
+  local builddir="$pkgdir/usr/lib/modules/$_version/build"
 
   echo "Installing build files..."
-  install -Dt "$builddir" -m644 .config Makefile Module.symvers System.map \
-    localversion.* version vmlinux
+  install -Dt "$builddir" -m644 .config Makefile Module.symvers System.map version
   install -Dt "$builddir/kernel" -m644 kernel/Makefile
   install -Dt "$builddir/arch/arm64" -m644 arch/arm64/Makefile
   cp -t "$builddir" -a scripts
@@ -230,14 +261,13 @@ _package-headers() {
       application/x-pie-executable\;*) # Relocatable binaries
         strip -v $STRIP_SHARED "$file" ;;
     esac
-  done < <(find "$builddir" -type f -perm -u+x ! -name vmlinux -print0)
+  done < <(find "$builddir" -type f -perm -u+x ! -name -print0)
 
   echo "Adding symlink..."
   mkdir -p "$pkgdir/usr/src"
   ln -sr "$builddir" "$pkgdir/usr/src/$pkgbase"
 }
 
-pkgname=("${pkgbase}" "${pkgbase}-headers")
 for _p in ${pkgname[@]}; do
   eval "package_${_p}() {
     _package${_p#${pkgbase}}
