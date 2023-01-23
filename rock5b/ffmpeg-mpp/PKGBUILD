@@ -121,7 +121,7 @@ source=(
 )
 b2sums=('SKIP'
         '555274228e09a233d92beb365d413ff5c718a782008075552cafb2130a3783cf976b51dfe4513c15777fb6e8397a34122d475080f2c4483e8feea5c0d878e6de'
-        'SKIP')
+        '7fff16d721cfc6dcbe5081a4250686dd4941e31a3f1b745485dfb72a599c3d147d35d8055070e9fefed0340efc0ce13a2f30eacae8b33331e7de1aa45baea46f')
 validpgpkeys=(DD1EC9E8DE085C629B3E1846B18E8928B3948D64) # Michael Niedermayer <michael@niedermayer.cc>
 
 prepare() {

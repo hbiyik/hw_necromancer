@@ -111,8 +111,8 @@ options=(
   debug
 )
 _tag=3d69f9682f06bbf72e0cdcdc9e66c9307ed6b24f
-source=(git+https://git.ffmpeg.org/ffmpeg.git#tag=${_tag}
-        rkmpp-4.patch)
+b2sums=('SKIP'
+        'd463068ecdf5ca2aeb99fb00a6fd06193e02bd9218b24774b1e618bf6cb4be055421889bd8bc099e41b5bb043cf6fed93a11cc8539f96cf2dd26ccf77074b108')
 b2sums=('SKIP'
         'SKIP')
 
