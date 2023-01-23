@@ -19,7 +19,7 @@
 
 pkgname=ffmpeg-mpp
 pkgver=5.1.2
-pkgrel=3
+pkgrel=4
 epoch=2
 pkgdesc='Complete solution to record, convert and stream audio and video'
 arch=(aarch64 arm7f)
@@ -81,7 +81,6 @@ depends=(
   xz
   zlib
   mpp-git
-  librga
 )
 makedepends=(
   amf-headers
