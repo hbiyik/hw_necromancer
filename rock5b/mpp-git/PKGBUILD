@@ -1,6 +1,5 @@
-_commit=93b1cd14f2ffed3ab2e520aa4aaa557061f3d5a3
 pkgname=mpp-git
-pkgver="r0.${_commit}"
+pkgver="r3181.93b1cd14"
 pkgrel=1
 pkgdesc='Rockchip Media Process Platform (MPP) Git'
 arch=('aarch64')
@@ -9,21 +8,26 @@ license=('Apache')
 depends=('gcc-libs' 'coreutils' 'systemd')
 makedepends=('cmake')
 install=install
-source=("${pkgname}-${pkgver}".tar.gz::"https://github.com/rockchip-linux/mpp/archive/${_commit}.tar.gz"
+source=(git+https://github.com/rockchip-linux/mpp.git#branch=develop
 		'mpp.rules'
 		'install')
 sha256sums=('SKIP'
-			'SKIP'
-			'SKIP')
+            'd27661a0c143fee2cb3d31b04be2503f1bd2291a2a0565ce391a663cd414ebb2'
+            'e41004dc18f77d37b23f84464c4367c7ccf94d8e86b6f751437b685322e153d2')
 
 build() {
-    cmake -B build -S "mpp-${_commit}" \
+    cmake -B build -S "mpp" \
         -DCMAKE_BUILD_TYPE=Release \
         -DHAVE_DRM=ON \
         -DCMAKE_INSTALL_LIBDIR:PATH='lib' \
         -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
         -G "Unix Makefiles"
     make -j$(nproc) -C build
+}
+
+pkgver() {
+  cd mpp
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 package() {
