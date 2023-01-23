@@ -20,7 +20,7 @@
 
 pkgname=ffmpeg4.4-mpp
 pkgver=4.4.3
-pkgrel=4
+pkgrel=5
 pkgdesc='MPP based video decoder acelleration for Rockchip SOCs'
 arch=(aarch64 arm7f)
 url=https://ffmpeg.org/
@@ -77,7 +77,6 @@ depends=(
   xz
   zlib
   libdrm
-  librga
   mpp-git
 )
 makedepends=(
