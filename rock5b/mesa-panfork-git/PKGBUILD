@@ -27,7 +27,7 @@ source=("mesa::git+https://gitlab.com/panfork/mesa.git"
 		"https://raw.githubusercontent.com/JeffyCN/rockchip_mirrors/${_fwcommit}/firmware/g610/mali_csffw.bin"
         LICENSE)
 sha512sums=('SKIP'
-            'SKIP'
+            'fd38a29e7255f36d3bdae3d1827ae39f465025199ad96605aa000c338cfb117ef4ec86bc0c30cb011a24c041a739824f50b16ab5155edcc0b8304a8faa421722'
             'f9f0d0ccf166fe6cb684478b6f1e1ab1f2850431c06aa041738563eb1808a004e52cdec823c103c9e180f03ffc083e95974d291353f0220fe52ae6d4897fecc7')
 validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l.velikov@gmail.com>
               '946D09B5E4C9845E63075FF1D961C596A7203456'  # Andres Gomez <tanty@igalia.com>
