@@ -24,7 +24,7 @@ _clangbuild=
 pkgbase=kodi-stable-mpp-git
 pkgname=("$pkgbase" "$pkgbase-eventclients" "$pkgbase-tools-texturepacker" "$pkgbase-dev")
 pkgver=r57760.f8fdeb6b1b1
-pkgrel=4
+pkgrel=5
 arch=('aarch64' 'arm7f')
 url="https://kodi.tv"
 license=('GPL2')
@@ -112,7 +112,7 @@ b2sums=('SKIP'
         'e7fab72ebecb372c54af77b4907e53f77a5503af66e129bd2083ef7f4209ebfbed163ffd552e32b7181829664fff6ab82a1cdf00c81dc6f3cc6bfc8fa7242f6e'
         '321f37d22a20b6e3b6925c193b802e4ff3d0bef1148209028e0b56b0decca27978cf994125f93f0a624892c002e364c82ead0fe15781ab00e84b2faf8a8f4c9c'
         'bb4de2dad90880baff712d882754bb11c69bb123138bcba985fbef858fa3508a728ea703f228c1239293f537bb3b3d2a82333f690653fc4da989cc37e4696c05'
-        'e288e2b065741d1c6bc4b1d10db015610c7f85413b6c4cdc991002941ec0fbcf95bf8c4da8db8bfc66d9cae39685326b4e68267e9b5e261257c9040fdcb27ea6'
+        '1a818e38b6f763d60ce50e4b0a5d26c86f833dd26dbcee352579d8395e6382b06ee816dad7938e3ea12a1e676251417ef4c090c21dca45f7decfba81694d3a2b'
         '6928d0fb1f4cb2609dee87c7078e02cecc37ddef263485b47be0ae5c281be67b403b39c95ea370c6b6667e1eceb1c7e6fb83ec9b04acd0bdbe4abec17fb84385'
         'e063edffb7d7deef1e9119ddf209df4f932c13ef0ef8b352de17da8ef6daafcdf85241b78f619bff520f00217bd10c53396ebe4b285e0415586fcabc2b1e617c')
 
