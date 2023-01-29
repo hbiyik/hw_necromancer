@@ -16,10 +16,10 @@ _fwcommit=309268f7a34ca0bba0ab94a0b09feb0191c77fb8
 pkgname=mesa-panfork-git
 pkgdesc="Libgl & gbm with panfrost for Mali G610"
 pkgver=r164484.120202c6757
-pkgrel=4
+pkgrel=5
 arch=('aarch64' 'armhf')
 makedepends=('meson' 'python-mako' 'bison' 'flex' 'cmake'
- 			 'libxfixes' 'libxxf86vm' 'lm_sensors' 'libxshmfence' 'wayland-protocols' 'libdrm' 'libxrandr')
+ 			 'libxfixes' 'libxxf86vm' 'lm_sensors' 'libxshmfence' 'wayland-protocols' 'libdrm' 'libxrandr' 'libglvnd')
 url="https://gitlab.com/panfork/mesa"
 license=('custom')
 options=('!lto')
@@ -51,7 +51,9 @@ build() {
     -Dllvm=disabled \
     -Dmicrosoft-clc=disabled \
     -Dintel-clc=disabled \
-    -Dplatforms=wayland,x11
+    -Dplatforms=wayland,x11 \
+	-Dgallium-nine=true \
+	-Dglvnd=true
 
   ninja -C build
   meson compile -C build
@@ -62,9 +64,9 @@ build() {
 }
 
 package() {
-  depends=('egl-wayland' 'libxfixes' 'libxxf86vm' 'lm_sensors' 'libxshmfence' 'libdrm' 'libxrandr')
-  provides=('mesa' 'libglvnd' 'libgles' 'libgl' 'libegl')
-  conflicts=('mesa' 'libglvnd' 'libgles' 'libgl' 'libegl')
+  depends=('egl-wayland' 'libxfixes' 'libxxf86vm' 'lm_sensors' 'libxshmfence' 'libdrm' 'libxrandr' 'libglvnd')
+  provides=('mesa-libgl' 'opengl-driver' 'mesa')
+  conflicts=('mesa-libgl' 'mesa')
 
   # copy firmware
   install -m644 -Dt "$pkgdir/usr/lib/firmware/" mali_csffw.bin
@@ -77,13 +79,10 @@ package() {
   _install fakeinstall/usr/lib/libEG*
   _install fakeinstall/usr/include
   _install fakeinstall/usr/lib/pkgconfig
-  #ln -sf libGL.so "$pkgdir/usr/lib/libOpenGL.so.0.0.0"
-  #ln -sf libGL.so "$pkgdir/usr/lib/libOpenGL.so.0"
-  #ln -sf libGL.so "$pkgdir/usr/lib/libOpenGL.so"
-  #ln -sf libGL.so "$pkgdir/usr/lib/libGLX.so.0.0.0"
-  #ln -sf libGL.so "$pkgdir/usr/lib/libGLX.so.0"
-  #ln -sf libGL.so "$pkgdir/usr/lib/libGLX.so"
-  # make sure there are no files left to install
+
+  _install fakeinstall/usr/share/glvnd/egl_vendor.d/50_mesa.json
+  _install fakeinstall/usr/lib/d3d
+  
   find fakeinstall -depth -print0 | xargs -0 rmdir
 
   install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE
