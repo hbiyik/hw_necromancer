@@ -6,6 +6,7 @@ arch=('aarch64')
 url='https://github.com/rockchip-linux/mpp/'
 license=('Apache')
 depends=('gcc-libs' 'coreutils' 'systemd')
+options=('debug' 'strip')
 makedepends=('cmake')
 install=install
 source=(git+https://github.com/rockchip-linux/mpp.git#branch=develop
