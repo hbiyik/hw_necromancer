@@ -7,7 +7,7 @@ _user="Googulator"
 _kernel=linux-rk3588-midstream
 pkgbase=$_kernel-git
 pkgname=("${pkgbase}-headers" $pkgbase)
-pkgver=$_pkgver
+pkgver=1153621.f563c09394db
 pkgrel=1
 arch=('aarch64')
 license=('GPL2')
@@ -56,7 +56,7 @@ prepare() {
     echo "Using User Specific Config"
     cp -f ../../custom/config ./.config
   else 
-    cp -f arch/arm64/configs/rockchip_linux_defconfig ./.config
+    cp -f arch/arm64/configs/rock-5b.config ./.config
   fi
 
   # fix distcc build which does not support gcc plugins
