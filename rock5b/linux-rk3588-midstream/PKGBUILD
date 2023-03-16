@@ -18,10 +18,6 @@ pkgdesc="Latest git Linux kernel package for rk3588 mid-ported to mainline"
 makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git' 'uboot-tools' 'vboot-utils' 'dtc')
 options=('!strip')
 
-# Patch1-19 comes from Radxa: https://github.com/radxa-repo/bsp/tree/main/linux/rockchip
-# Patch20: Warning Supressions for buildsystem not to quit including DistCC builds
-# Patch21-25: icecream95's mesa speed patches from kernel 6.x https://gitlab.com/panfork/rk3588-implicit-sync
-# Patch22: Force Enabling AV1 decoder in 3588. This may be implemented in radxa git as well soon
 source=(git+https://github.com/$_user/$_kernelrepo.git#branch=$_kernelbranch
 		'linux.preset'
 		'extlinux.arch.template')
