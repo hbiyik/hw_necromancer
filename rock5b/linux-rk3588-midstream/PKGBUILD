@@ -22,7 +22,7 @@ source=(git+https://github.com/$_user/$_kernelrepo.git#branch=$_kernelbranch
 		'linux.preset'
 		'extlinux.arch.template')
 b2sums=('SKIP'
-        'b5ebfe78b703b7d5ea31be16513ff4e91d0ca7f13657c6d09ff92ef4f1566bf501a4b536b7f48791055d0b327724ada23a3f5a34247c5effe3fe2ff7e1acd8eb'
+        'bd296f775df973c6dcb6bd8311ce4d3af9a8d4a67905f17c450cae776aab0229987d473334d38fd102a34ed483a121f67ac58a48fd9e6fab2c714c7079e06613'
         '47ceb511b1631c55e8cd4ba840f34be4cfe3214194f23d9f71d7c5336f8f9ff9bc3fc8c052428cfc31f55bb25fb4565baf5eca791f341895f357d22e137c6e51')
 
 pkgver(){
