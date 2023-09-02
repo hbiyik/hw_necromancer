@@ -1,0 +1,34 @@
+post_install() {
+  gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor
+echo "
+  The simplest way to start the server is:
+  /opt/urserver/urserver --daemon
+
+  add the above line to a startup script etc.
+
+  There is also a user systemd serice available.
+  You can start it with
+  systemctl --user start urserver
+  You can enable at boot with
+  systemctl --user enable urserver
+  (Note: A one time call (as user) to
+  /opt/urserver/urserver-start
+  could be necessary before using it)
+
+  For more options:
+  /opt/urserver/urserver --help
+
+  See link for port configurations:
+  http://wiki.unifiedremote.com/wiki/Configuration:Routers_and_Ports
+
+  Configure server from a browser:
+  localhost:9510/web"
+}
+
+post_upgrade() {
+  post_install
+}
+
+post_remove() {
+  gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor
+}

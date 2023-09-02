@@ -1,0 +1,56 @@
+# Maintainer: AudioLinux  <audiolinux AT fastmail DOT fm>
+# Contributor: peace4all <markspost at rocketmail dot com>
+
+pkgname=unified-remote-server
+pkgver=3.13.0.2505
+build=2505
+pkgrel=1
+pkgdesc="Unified Remote Server"
+arch=('x86_64' 'aarch64')
+url="http://www.unifiedremote.com/"
+depends=('glibc' 'gcc-libs')
+license=('freeware')
+install=$pkgname.install
+
+case $(uname -m) in
+"x86_64")
+    _arch=x64;;
+"aarch64")
+    _arch=arm64;;
+esac
+source=("https://www.unifiedremote.com/static/builds/server/linux-$_arch/$build/urserver-$pkgver.deb"
+        "urserver.service"
+        "meta.prop"
+        "remote.lua")
+sha256sums=('SKIP'
+            '1a19c0c8da26ba963cda8ccd13bbb19e5fd3bd2cfff797e2e2f688c60e1a2e6c'
+            '4bac099a0eed996d44ea253fdad855ed71ae7ea1012b06f0ae2ea8f630e69225'
+            '27ad4788c50798ac8bf9f951ab7eca4559f0f3f6cf70775904c5832bff125e5b')
+
+package() {
+	cd ${srcdir}
+
+	# decompress data
+	tar xvf data.tar.xz
+
+	# install folders
+	mkdir -p ${pkgdir}/{opt,usr}
+	cp -r {opt,usr} "${pkgdir}/"
+	
+	# add remote input where clicking works
+	mkdir -p "${pkgdir}/opt/urserver/remotes/Unified/Custom/Remote Input"
+	cp -r "${pkgdir}/opt/urserver/remotes/Unified/Main/Basic Input/" "${pkgdir}/opt/urserver/remotes/Unified/Custom/Remote Input"
+	install -Dm644 remote.lua "${pkgdir}/opt/urserver/remotes/Unified/Custom/Remote Input/"
+	install -Dm644 meta.prop "${pkgdir}/opt/urserver/remotes/Unified/Custom/Remote Input/"
+
+	# clean up permissions
+	find "${pkgdir}" -type d | xargs -I {} chmod -R 755 "{}"
+	find "${pkgdir}" -type f | xargs -I {} chmod -R 644 "{}"
+	chmod 755 "${pkgdir}/opt/urserver/urserver"
+	chmod 755 "${pkgdir}/opt/urserver/urserver-start"
+	chmod 755 "${pkgdir}/opt/urserver/urserver-stop"
+	
+	# add systemd service
+    install -Dm644 "urserver.service" "$pkgdir/usr/lib/systemd/system/urserver.service"
+}
+
